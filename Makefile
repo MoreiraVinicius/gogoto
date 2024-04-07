@@ -2,16 +2,16 @@
 
 build: gomodgen
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/createToDestinationUrl functions/createShortenedUrl/main.go
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/redirectToDestinationUrl.exe functions/redirectToDestinationUrl/main.go
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/deleteToDestinationUrl.exe functions/deleteShortenedUrl/main.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/createToDestinationUrl src/functions/createShortenedUrl/main.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/redirectToDestinationUrl src/functions/redirectToDestinationUrl/main.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/deleteToDestinationUrl src/functions/deleteShortenedUrl/main.go
 	
 
 build-win: gomodgen
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o bin/createShortenedUrl.exe functions/createShortenedUrl/main.go
-	env GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o bin/redirectToDestinationUrl.exe functions/redirectToDestinationUrl/main.go
-	env GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o bin/deleteShortenedUrl.exe functions/deleteShortenedUrl/main.go
+	env GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o bin/createShortenedUrl.exe src/functions/createShortenedUrl/main.go
+	env GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o bin/redirectToDestinationUrl.exe src/functions/redirectToDestinationUrl/main.go
+	env GOARCH=amd64 GOOS=windows go build -ldflags="-s -w" -o bin/deleteShortenedUrl.exe src/functions/deleteShortenedUrl/main.go
 
 
 clean:

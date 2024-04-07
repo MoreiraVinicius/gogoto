@@ -6,10 +6,10 @@ on:
       - master
 
 env:
-    AZURE_FUNCTIONAPP_NAME_REDIRECT: 'redirectToDestinationUrl'
-    AZURE_FUNCTIONAPP_NAME_CREATE: 'createShortenedUrl'
-    AZURE_FUNCTIONAPP_NAME_DELETE: 'deleteShortenedUrl'
-    AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
+  AZURE_FUNCTIONAPP_NAME_REDIRECT: "redirectToDestinationUrl"
+  AZURE_FUNCTIONAPP_NAME_CREATE: "createShortenedUrl"
+  AZURE_FUNCTIONAPP_NAME_DELETE: "deleteShortenedUrl"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./bin"
 
 jobs:
   build:
@@ -18,63 +18,66 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v3
-  
-      - name: 'Login via Azure CLI'
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21.3  # Substitua por sua versão Go
+
+      - name: Run make build
+        run: make build
+
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      # - name: Checkout do repositório
+      #   uses: actions/checkout@v3
+
+      - name: "Login via Azure CLI"
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
-    
+
       - name: Terraform Init - Avaliando mudanças para serem implementadas
         uses: hashicorp/setup-terraform@v2.0.2
 
       - name: Terraform Init - Iniciando
         run: terraform init
 
+  apply:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Terraform apply - Aplicando mudança de infraestrutura na Azure
         run: |
-            terraform apply -auto-approve
-      
-      # - name: 'Deploy função: redirectShortenedUrl'
-      #   uses: Azure/functions-action@v1
-      #   id: fa1
-      #   with:
-      #       app-name: $AZURE_FUNCTIONAPP_NAME_REDIRECT
-      #       package: AZURE_FUNCTIONAPP_PACKAGE_PATH
-      
-      # - name: 'Deploy função: createShortenedUrl'
-      #   uses: Azure/functions-action@v1
-      #   id: fa2
-      #   with:
-      #       app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_CREATE }}
-      #       package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          terraform apply -auto-approve
 
-      # - name: 'Deploy função: deleteShortenedUrl'
-      #   uses: Azure/functions-action@v1
-      #   id: fa3
-      #   with:
-      #       app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_DELETE }}
-      #       package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-
-      deploy:
-        needs: build
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            function: ['createShortenedUrl', 'deleteShortenedUrl', 'redirectToDestinationUrl']
-        steps:
-          - name: Set app name
-            id: appname
-            run: |
-              if [[ "${{ matrix.function }}" == "createShortenedUrl" ]]; then
-                echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_CREATE }}" >> $GITHUB_ENV
-              elif [[ "${{ matrix.function }}" == "deleteShortenedUrl" ]]; then
-                echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_DELETE }}" >> $GITHUB_ENV
-              else
-                echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_REDIRECT }}" >> $GITHUB_ENV
-              fi
-          - name: 'Deploy função: ${{ matrix.function }}'
-            uses: Azure/functions-action@v1
-            with:
-              app-name: ${{ env.APP_NAME }}
-              package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-# terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}"
+  deploy:
+    needs: apply
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        function:
+          [
+            "createShortenedUrl",
+            "deleteShortenedUrl",
+            "redirectToDestinationUrl",
+          ]
+    steps:
+      - name: Set app name
+        id: appname
+        run: |
+          if [[ "${{ matrix.function }}" == "createShortenedUrl" ]]; then
+            echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_CREATE }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.function }}" == "deleteShortenedUrl" ]]; then
+            echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_DELETE }}" >> $GITHUB_ENV
+          else
+            echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_REDIRECT }}" >> $GITHUB_ENV
+          fi
+      - name: "Deploy função: ${{ matrix.function }}"
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.APP_NAME }}
+          package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
