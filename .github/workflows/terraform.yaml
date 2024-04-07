@@ -2,9 +2,7 @@ name: gogoto infraestrutura
 
 on:
   push:
-    branches:
-      - master
-
+    branches: [ "feature/github-actions", "master" ]
 env:
   AZURE_FUNCTIONAPP_NAME_REDIRECT: "redirectToDestinationUrl"
   AZURE_FUNCTIONAPP_NAME_CREATE: "createShortenedUrl"
@@ -20,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
           go-version: 1.21.3  # Substitua por sua versão Go
 
