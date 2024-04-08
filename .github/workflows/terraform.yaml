@@ -35,7 +35,7 @@ jobs:
         env:
           AZURE_RBAC_CREDENTIALS: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
         run: |
-          example-command "$env:AZURE_RBAC_CREDENTIALS"
+          Write-Host "$env:AZURE_RBAC_CREDENTIALS"
       - name: "Login via Azure CLI"
         uses: azure/login@v1
         with:
