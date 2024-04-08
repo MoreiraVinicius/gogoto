@@ -31,11 +31,8 @@ jobs:
     steps:
       # - name: Checkout do repositório
       #   uses: actions/checkout@v3
-      - shell: pwsh
-        env:
-          AZURE_RBAC_CREDENTIALS: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
-        run: |
-          Write-Host "$env:AZURE_RBAC_CREDENTIALS"
+      - shell: bash
+        run: echo ${{secrets.AZURE_RBAC_CREDENTIALS}} | sed 's/./& /g'
       - name: "Login via Azure CLI"
         uses: azure/login@v1
         with:
