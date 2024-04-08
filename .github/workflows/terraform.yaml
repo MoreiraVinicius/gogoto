@@ -31,7 +31,11 @@ jobs:
     steps:
       # - name: Checkout do repositório
       #   uses: actions/checkout@v3
-
+      - shell: cmd
+        env:
+          SUPER_SECRET: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
+        run: |
+          example-command "%AZURE_RBAC_CREDENTIALS%"
       - name: "Login via Azure CLI"
         uses: azure/login@v1
         with:
