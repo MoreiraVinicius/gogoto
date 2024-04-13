@@ -27,11 +27,11 @@ jobs:
 
   setup:
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
-      # - name: Checkout do repositório
-      #   uses: actions/checkout@v3
-
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
       - name: "Login via Azure CLI"
         uses: azure/login@v1
         with:
@@ -52,30 +52,32 @@ jobs:
         run: |
           terraform apply -auto-approve
 
-  deploy:
-    needs: apply
+  deploy_create_shortened_url:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        function:
-          [
-            "createShortenedUrl",
-            "deleteShortenedUrl",
-            "redirectToDestinationUrl",
-          ]
+    needs: apply
     steps:
-      - name: Set app name
-        id: appname
-        run: |
-          if [[ "${{ matrix.function }}" == "createShortenedUrl" ]]; then
-            echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_CREATE }}" >> $GITHUB_ENV
-          elif [[ "${{ matrix.function }}" == "deleteShortenedUrl" ]]; then
-            echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_DELETE }}" >> $GITHUB_ENV
-          else
-            echo "APP_NAME=${{ env.AZURE_FUNCTIONAPP_NAME_REDIRECT }}" >> $GITHUB_ENV
-          fi
-      - name: "Deploy função: ${{ matrix.function }}"
+      - name: Deploy createShortenedUrl
         uses: Azure/functions-action@v1
         with:
-          app-name: ${{ env.APP_NAME }}
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_CREATE }}
+          package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+
+  deploy_delete_shortened_url:
+    runs-on: ubuntu-latest
+    needs: apply
+    steps:
+      - name: Deploy deleteShortenedUrl
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_DELETE }}
+          package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+
+  deploy_redirect_to_destination_url:
+    runs-on: ubuntu-latest
+    needs: apply
+    steps:
+      - name: Deploy redirectToDestinationUrl
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_REDIRECT }}
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
