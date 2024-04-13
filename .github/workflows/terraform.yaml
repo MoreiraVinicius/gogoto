@@ -41,7 +41,9 @@ jobs:
         uses: hashicorp/setup-terraform@v2.0.2
 
       - name: Terraform Init - Iniciando
-        run: terraform init
+        run: |
+          cd infrastructure/
+          terraform init
 
   apply:
     needs: setup
