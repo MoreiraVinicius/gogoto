@@ -54,9 +54,9 @@ jobs:
 
   deploy_create_shortened_url:
     runs-on: ubuntu-latest
-    need: apply
+    needs: apply
     steps:
-      - name: Deploy função: createShortenedUrl
+      - name: Deploy createShortenedUrl
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_CREATE }}
@@ -64,9 +64,9 @@ jobs:
 
   deploy_delete_shortened_url:
     runs-on: ubuntu-latest
-    need: apply
+    needs: apply
     steps:
-      - name: Deploy função: deleteShortenedUrl
+      - name: Deploy deleteShortenedUrl
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_DELETE }}
@@ -74,9 +74,9 @@ jobs:
 
   deploy_redirect_to_destination_url:
     runs-on: ubuntu-latest
-    need: apply
+    needs: apply
     steps:
-      - name: Deploy função: redirectToDestinationUrl
+      - name: Deploy redirectToDestinationUrl
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_REDIRECT }}
