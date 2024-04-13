@@ -52,6 +52,7 @@ jobs:
     steps:
       - name: Terraform apply - Aplicando mudança de infraestrutura na Azure
         run: |
+          cd infrastructure/
           terraform apply -auto-approve
 
   deploy_create_shortened_url:
