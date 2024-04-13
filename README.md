@@ -1,5 +1,6 @@
-# redirect-url-shortener
-Azure Function + Golang 
+# gogoto
+
+Azure serverless shorterner URL
 
 ## Passo a Passo
 
@@ -72,30 +73,22 @@ az ad sp create-for-rbac --name "myServicePrincipalApp" --role contributor \
 5 - Envie e faça o push do seu projeto para o repositório do GitHub, você deverá ver um novo fluxo de trabalho do GitHub iniciado na guia Ações.
 
 
-# Motivação
+## Bancos de dados
+Escolha dos bancos dados, tamanho de armazenamento utilizado e exemplos de utilização. Para esse projeto será usado as ferramentas da azure: Cosmos DB e Azure Redis Cache
 
-Este arquivo de configuração parece ser usado para definir comportamentos específicos em um ambiente Azure Functions, incluindo como os logs são tratados, quais extensões são usadas e como os manipuladores personalizados (custom handlers) são configurados. Vamos detalhar cada parâmetro:
 
-- `"version": "2.0"`: Especifica a versão do schema de configuração usado pelo arquivo. Isso ajuda a garantir que o arquivo seja interpretado corretamente pela plataforma Azure Functions.
+### tabelas e documentos
 
-- `"logging"`: Configurações relacionadas ao registro de logs.
-  - `"applicationInsights"`: Define configurações específicas para o Application Insights, uma ferramenta de monitoramento e análise.
-    - `"samplingSettings"`: Configurações de amostragem para reduzir o volume de dados enviados ao Application Insights.
-      - `"isEnabled": true`: Ativa a amostragem de dados.
-      - `"excludedTypes": "Request"`: Especifica que os dados de solicitações HTTP não serão amostrados, ou seja, todos os dados de solicitação serão enviados ao Application Insights.
+ "hashes"
 
-- `"extensionBundle"`: Define um conjunto de extensões que devem ser usadas pela função.
-  - `"id": "Microsoft.Azure.Functions.ExtensionBundle"`: Identifica o pacote de extensões a ser usado.
-  - `"version": "[3.*, 4.0.0)"`: Especifica a versão do pacote de extensões, neste caso, qualquer versão maior ou igual a 3.0 e menor que 4.0.0.
+Tabela "urls"  
 
-- `"customHandler"`: Configurações para um manipulador personalizado, que permite executar funções em linguagens ou runtimes não diretamente suportados pelo Azure Functions.
-  - `"description"`: Descreve como o manipulador personalizado deve ser executado.
-    - `"defaultExecutablePath": "server"`: Caminho para o executável padrão que inicia o manipulador personalizado.
-    - `"workingDirectory": ""`: Diretório de trabalho para o manipulador personalizado. Um valor vazio significa que será usado o diretório padrão.
-    - `"arguments": []`: Argumentos adicionais que devem ser passados para o executável.
-  - `"enableForwardingHttpRequest": true`: Quando verdadeiro, permite que as solicitações HTTP sejam encaminhadas diretamente para o manipulador personalizado, facilitando a criação de APIs HTTP.
+URL Longa -> 2kb (2048 chars)
+URL Curta -> 17 Bytes (17 chars)
+created_at -> 7 Bytes (7 chars)
+exp_at -> 7 Bytes 
 
-Cada um desses parâmetros permite uma personalização detalhada de como as funções Azure são executadas, monitoradas e estendidas, proporcionando flexibilidade para atender a diferentes necessidades de desenvolvimento.
+
 
 ### Configurando acesso ao CosmosDB localmente
  Caso queira rodar a função localmente, o Azure Identity não pode usar a identidade gerenciada pelo sistema, porque ela não está disponível. Nesse caso, o Azure Identity tentará usar outras estratégias de autenticação, como o Azure CLI ou uma conta de serviço.

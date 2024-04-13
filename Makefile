@@ -22,6 +22,14 @@ clean:
 # 	./setEnv.sh
 # 	sls deploy --verbose
 
+oidc:
+	chmod u+x create_oidc_service_principal.sh
+	./create_oidc_service_principal.sh
+
+rbac:
+	chmod u+x create_rbac_contributor_scoped.sh
+	./create_rbac_contributor_scoped.sh
+
 gomodgen:
 	chmod u+x gomod.sh
 	./gomod.sh
