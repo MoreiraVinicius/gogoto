@@ -58,9 +58,7 @@ jobs:
         working-directory: infrastructure
         shell: bash
         run: |
-          echo 'plan<<EOF' >> $GITHUB_OUTPUT
-          terraform plan -no-color -out=tfplan >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+          terraform plan -no-color -out=tfplan
 
       - name: Terraform apply - Aplicando mudança de infraestrutura na Azure
         run: |
