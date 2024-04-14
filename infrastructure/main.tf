@@ -1,19 +1,14 @@
-resource "azurerm_resource_group" "gogoto_rg" {
-  name     = var.resource_group_name
-  location = var.location
-}
-
 resource "azurerm_user_assigned_identity" "gogoto_identity" {
-  resource_group_name = azurerm_resource_group.gogoto_rg.name
-  location            = azurerm_resource_group.gogoto_rg.location
+  resource_group_name = var.resource_group_name
+  location            =var.location
   name                = "gogoto-identity"
 }
 
 # Conta de armazenamento do Azure 
 resource "azurerm_storage_account" "gogoto_sa" {
   name                     = "urlgogotosacc1"
-  resource_group_name      = azurerm_resource_group.gogoto_rg.name
-  location                 = azurerm_resource_group.gogoto_rg.location
+  resource_group_name      = var.resource_group_name
+  location                 =var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
@@ -21,7 +16,7 @@ resource "azurerm_storage_account" "gogoto_sa" {
 # Delete - Plano de serviço de aplicativo
 resource "azurerm_service_plan" "delete-gogoto_asp" {
   name                = "redirect-url-gogoto-asp"
-  resource_group_name = azurerm_resource_group.gogoto_rg.name
+  resource_group_name = var.resource_group_name
   location            = var.location
   os_type             = "Linux"
   sku_name            = "B3"
@@ -49,7 +44,7 @@ resource "azurerm_service_plan" "redirect-gogoto_asp" {
 module "cosmosdb" {
   source = "./modules/cosmosdb"
   location = var.location
-  resource_group_name = azurerm_resource_group.gogoto_rg.name  
+  resource_group_name = var.resource_group_name  
   user_assigned_identity_id = azurerm_user_assigned_identity.gogoto_identity.id
   // Passar as variáveis necessárias
 }

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-az ad sp create-for-rbac --name "gogoto_sp" --role contributor --scopes /subscriptions/01adaa40-4ff4-4904-a110-223e2883171e/resourceGroups/south-america-resource
+az ad sp create-for-rbac --name "gogoto_sp" --role contributor --scopes /subscriptions/01adaa40-4ff4-4904-a110-223e2883171e/resourceGroups/gogoto_rg --json-auth
 # az ad sp create-for-rbac --name "gogoto_sp" --role contributor --scopes /subscriptions/01adaa40-4ff4-4904-a110-223e2883171e/resourceGroups/south-america-resource/providers/Microsoft.Web/sites/createShortenedUrl,/subscriptions/01adaa40-4ff4-4904-a110-223e2883171e/resourceGroups/south-america-resource/providers/Microsoft.Web/sites/deleteShortenedUrl,/subscriptions/01adaa40-4ff4-4904-a110-223e2883171e/resourceGroups/south-america-resource/providers/Microsoft.Web/sites/redirectToDestinationUrl --sdk-auth
