@@ -27,7 +27,7 @@ jobs:
 
   terraform:
     runs-on: ubuntu-latest
-
+    needs: build
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v3
@@ -52,11 +52,13 @@ jobs:
           terraform plan
 
       - name: Terraform apply - Aplicando mudança de infraestrutura na Azure
+        id: apply
+        working-directory: infrastructure
         run: |
           terraform apply -auto-approve
 
   deploy_create_shortened_url:
-    name: Deploy Azure Function 'createShortenedUrl'
+    name: createShortenedUrl
     runs-on: ubuntu-latest
     needs: terraform
     steps:
@@ -67,7 +69,7 @@ jobs:
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
   deploy_delete_shortened_url:
-    name: Deploy Azure Function 'deleteShortenedUrl'
+    name: deleteShortenedUrl
     runs-on: ubuntu-latest
     needs: terraform
     steps:
@@ -78,7 +80,7 @@ jobs:
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
   deploy_redirect_to_destination_url:
-    name: Deploy Azure Function 'redirectToDestinationUrl'
+    name: redirectToDestinationUrl
     runs-on: ubuntu-latest
     needs: terraform
     steps:
