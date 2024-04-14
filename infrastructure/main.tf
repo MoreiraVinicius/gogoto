@@ -28,7 +28,7 @@ resource "azurerm_service_plan" "create-gogoto_asp" {
   resource_group_name = var.resource_group_name
   location            = var.location
   os_type             = "Linux"
-  sku_name            = "P1v2"
+  sku_name            = "B3"
 }
 
 # Redirect - Plano de serviço de aplicativo
@@ -37,7 +37,7 @@ resource "azurerm_service_plan" "redirect-gogoto_asp" {
   resource_group_name = var.resource_group_name
   location            = var.location
   os_type             = "Linux"
-  sku_name            = "P1v2"
+  sku_name            = "B3"
 }
 
 
